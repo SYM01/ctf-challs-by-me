@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}{{ err.code | e}} | 0CTF blog{% endblock %}
+{% block content %}
+    <div class="row align-center">
+        <div class="col col-6">
+            <h1>{{ err.name | e }}</h1>
+
+            <p>{{ err.description | e }}</p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block title %}Create New Article | 0CTF blog{% endblock %}
+{% block content %}
+    <div class="row align-center">
+        <div class="col col-8">
+            <h1>New Article</h1>
+
+            <form method="post" action="" class="form">
+                <div class="form-item">
+                    <label>Title</label>
+                    <input name="title" type="text" maxlength="45" value="{{ title | e}}" pattern="[a-zA-Z,\.\s]+"required>
+                </div>
+
+                <div class="form-item">
+                    <label>Content</label>
+                    <textarea name="content" rows="8" placeholder="The input must match /[a-zA-Z,\.\s]+/" required>{{ content | e }}</textarea>
+                </div> 
+
+                <div class="row gutters">
+                        <div class="col col-6">
+                            <div class="form-item">
+                                <label>Page Effect</label>
+                                <select name="effect" id="effect">
+                                    <option value="nest"{% if page_effect == "nest" %} selected="selected"{% endif %}>Nest</option>
+                                    <option value="3waves"{% if page_effect == "3waves" %} selected="selected"{% endif %}>Waves</option>
+                                    <option value="lines"{% if page_effect == "lines" %} selected="selected"{% endif %}>Lines Network</option>
+                                    <option value="sphere"{% if page_effect == "sphere" %} selected="selected"{% endif %}>Spherical Rays</option>
+                                </select>
+                            </div> 
+                        </div>
+                        <div class="col col-6">
+                            <div class="form-item">
+                                <label>{# just a palceholder #}&nbsp;</label>
+                                <button>Post</button>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_script %}
+{% endblock %}

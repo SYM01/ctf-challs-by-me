@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}{{ data.title | e }} | 0CTF blog{% endblock %}
+{% block content %}
+    <h1>{{ data.title | e }}</h1>
+    <p id="article">
+        {{ data.content | e }}
+    </p>
+    <input type="hidden" id="effect" value="{{ data.page_effect | safe }}">
+
+    <section id="comments">
+        <form method="post" action="" class="form">
+            <label><h3>Leave A Message</h3></label>
+            <textarea name="comment"></textarea>
+            <button class="button outline small">Comment</button>
+        </form>
+
+        {% if comments | length > 0 %}
+        <div class="" id="comments-list">
+            {% for item in comments %}
+            <div class="comment-item">
+                <span class="label tag focus outline">{{ item.username | e }}</span>: 
+                {{ item.comment | e }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <nav class="pagination align-center upper strong">
+            <ul>
+                {% if page > 1 %}
+                <li class="prev"><a href="{{ url_for(".article", id=data.aid, p=page-1) }}">&lt; Prev</a></li>
+                {% endif %}
+                <li class="w100">
+                    <ul>
+                        <li><a href="#comments">Back to top</a></li>
+                    </ul>
+                </li>
+                {% if page < max_page %}
+                <li class="next"><a href="{{ url_for(".article", id=data.aid, p=page+1) }}">Next &gt;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% else %}
+        <h3>No articles have been published yet, plz create one.</h3>
+        {% endif %}
+    </section>
+{% endblock %}
+{% block extra_script %}
+    <script nonce="{{ request.nonce }}" src="{{ url_for("static", filename="js/article.js")}}"></script>
+{% endblock %}

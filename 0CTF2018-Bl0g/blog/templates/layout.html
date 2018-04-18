@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block extra %}0CTF blog{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/kube.min.css") }}">
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/main.css") }}">
+</head>
+<body>
+    <div id="page">
+        <header class="header-mobile show-sm">
+            <section>
+                <div class="brand">
+                <a href="/">0CTF Blog</a>
+                </div>
+                <a href="#" id="nav-toggle" data-component="toggleme" data-target="#navigation-mobile"><i class="kube-menu"></i></a>
+            </section>
+            <nav id="navigation-mobile" class="navigation hide">
+                <ul>
+                    {% if session.uid %}
+                    <li><a href="{{ url_for(".home") }}">Home</a></li>
+                    <li><a href="{{ url_for(".new_article") }}">New Article</a></li>
+                    <li><a href="{{ url_for(".flag") }}">Flag</a></li>
+                    <li><a href="{{ url_for(".submit") }}">Submit</a></li>
+                    <li><a href="{{ url_for(".logout") }}">Log Out</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for(".login", next=request.path) }}">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        <header class="header hide-sm">
+            <section>
+                <div class="brand">
+                    <a href="/">0CTF Blog</a>
+                </div>
+            </section>
+            <nav class="navigation">
+                <ul>
+                    {% if session.uid %}
+                    <li><a href="{{ url_for(".home") }}">Home</a></li>
+                    <li><a href="{{ url_for(".new_article") }}">New Article</a></li>
+                    <li><a href="{{ url_for(".flag") }}">Flag</a></li>
+                    <li><a href="{{ url_for(".submit") }}">Submit</a></li>
+                    <li><a href="{{ url_for(".logout") }}">Log Out</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for(".login", next=request.path) }}">Log In</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        <main class="container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message" data-component="message">{{ message | e }}<span class="close small"></span></div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script nonce="{{ request.nonce }}" src="{{ url_for("static", filename="js/config.js")}}"></script>
+    <script nonce="{{ request.nonce }}" src="{{ url_for("static", filename="js/jquery-3.3.1.min.js")}}"></script>
+    <script nonce="{{ request.nonce }}" src="{{ url_for("static", filename="js/kube.min.js")}}"></script>
+    {% block extra_script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}Submit | 0CTF blog{% endblock %}
+{% block content %}
+    <div class="row align-center">
+        <div class="col col-8">
+            <h1>Submit an URL</h1>
+            <p class="muted">The admin(<code>No.{{ session.uid | e }}</code>) will check the URL as soon as possible, with the <code>No.{{ session.uid | e }}</code> browser, the newest Chrome.</p>
+            <p class="muted">
+                <span class="label error outline">Note</span>
+                The URL you submit must start with <code>{{ request.url_root | e }}</code>
+            </p>
+            <p class="muted">
+                <span class="label error outline">Warn</span>
+                You'd better wait 10s after submitting the URL.
+            </p>
+            <form method="post" action="" class="form">
+                <div class="form-item">
+                    <label>URL</label>
+                    <input name="url" type="text" maxlength="45">
+                </div>
+
+                <div class="form-item">
+                    <div class="g-recaptcha" data-sitekey="6LcmDE8UAAAAAKEN_KIMEpRYZAJmNTmRDr5WR07S"></div>
+                </div> 
+
+                <div class="form-item">
+                    <button>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_script %}
+    <script nonce="{{ request.nonce }}" src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Recent Articles | 0CTF blog{% endblock %}
+{% block content %}
+    <h2 id="recent-articles">Recent Articles</h2>
+    <p class="muted">
+        <span class="label focus outline">Note</span>
+        This site is under development and only <strong>admin</strong> can see your articles.
+    </p>
+
+    {% if articles | length > 0 %}
+    <div class="row gutters" id="articles-list">
+        {% for item in articles %}
+        <a class="col col-6 article-item" href="{{ url_for(".article", id=item.aid) }}">
+            <div class="article-title">
+                <span class="label tag error outline">{{ item.aid }}</span>
+                {{ item.title | e }}
+            </div>
+            <div class="muted">{{ item.brief | e }}</div>
+        </a>
+        {% endfor %}
+    </div>
+
+    <nav class="pagination align-center upper strong">
+        <ul>
+            {% if page > 1 %}
+            <li class="prev"><a href="{{ url_for(".home", p=page-1) }}">&lt; Prev</a></li>
+            {% endif %}
+            <li class="w100">
+                <ul>
+                    <li><a href="#recent-articles">Back to top</a></li>
+                </ul>
+            </li>
+            {% if page < max_page %}
+            <li class="next"><a href="{{ url_for(".home", p=page+1) }}">Next &gt;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <h3>No articles have been published yet, plz create one.</h3>
+    {% endif %}
+{% endblock %}
