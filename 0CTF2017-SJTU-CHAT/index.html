@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chat AI</title>
+
+  <style>
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    background-color: #EEE;
+    margin: 0;
+    padding: 0;
+  }
+  #container {
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  #description, #chat-window, #chat-input {
+    margin: 5px;
+  }
+  #description {
+    flex: none;
+  }
+  #description .main {
+    font-size: 40px;
+    color: #b3f9f4;
+    text-shadow: turquoise -2px -2px, #888 2px 2px;
+  }
+  #description .sub {
+    float: right;
+    color: #999;
+  }
+  #chat-window {
+    flex: 1;
+    background-color: #FFF;
+    border: 2px solid #CCC;
+    border-radius: 10px;
+    padding: 10px 16px;
+    overflow: scroll;
+  }
+  #chat-input {
+    flex: none;
+  }
+  #chat-input input {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    background-color: #FFF;
+    border: 2px solid #CCC;
+    border-radius: 10px;
+    padding: 0 10px;
+  }
+  .chat-item .title {
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 2px dashed #CCC;
+  }
+  .right {
+    text-align: right;
+  }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="description">
+      <div class="main">
+          Chat with AI.
+      </div>
+      <div class="sub">
+        Plz use the latest Chrome.
+      </div>
+    </div>
+    <div id="chat-window">
+    </div>
+    <div id="chat-input">
+      <input type="text" placeholder="hello" >
+    </div>
+  </div>
+  <script src="chatai.js"></script>
+  <script>
+    var query = function(myStrValue) {
+      var ptr  = allocate(intArrayFromString(myStrValue), 'i8', ALLOC_NORMAL);
+      var retPtr = Module.ccall('ask', 'string', ['number'], [ptr])
+      
+      _free(ptr)
+      return retPtr;
+    }
+    var appendChat = function(msg, isBot) {
+      var content;
+      if (isBot) {
+        content = '<div class="chat-item right"><div class="title">White-Hat</div><div class="content">'+msg+'</div></div>';
+      } else {
+        content = '<div class="chat-item"><div class="title">Green-Hat</div><div class="content">'+msg+'</div></div>';
+      }
+
+      var elem = document.querySelector('#chat-window');
+      elem.insertAdjacentHTML('beforeend', content);
+      elem.scrollTop = elem.scrollHeight;
+    }
+
+    var i = document.querySelector('input');
+    i.focus();
+    i.addEventListener('keypress', function(e) {
+      var key = e.which || e.keyCode;
+      if (key !== 13 || this.value.length == 0) { 
+        return;
+      }
+
+      appendChat(this.value);
+      appendChat(query(this.value), true);
+      i.value = '';
+    })
+  </script>
+</body>
+</html>
