@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <section class="login-panel">
+        <h2>注册</h2>
+        <form method="POST" action="{{ url_for('register') }}">
+            <fieldset>
+                <label for="username">用户名</label>
+                {% if username %}
+                <input type="text" placeholder="Patoilo" id="username" name="username" maxlength="100" value="{{ username | e }}">
+                {% else %}
+                <input type="text" placeholder="Patoilo" id="username" name="username" maxlength="100">
+                {% endif %}
+                
+                <label for="username">密码</label>
+                <input type="text" placeholder="******" id="password" name="password">
+                
+                <label for="username">验证码</label>
+                <img class="captcha-image float-right" src="{{ url_for('captcha', t=current_time()) }}" alt="验证码" class="src" title="点击更换验证码">
+                <div class="captcha-input">
+                    <input type="text" placeholder="12345" maxlength="5" id="captcha" name="captcha">
+                </div>
+                
+
+                <input class="button-primary" type="submit" value="注册">
+                <a class="button button-clear" href="{{ url_for('login') }}">已有账户？直接登陆</a>
+            </fieldset>
+            </form>
+    </section>
+{% endblock %}

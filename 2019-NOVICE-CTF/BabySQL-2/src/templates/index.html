@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Baby SQL 2</title>
+    <style>
+    body {
+        text-align: center;
+        font-size: 20px;
+    }
+    </style>
+</head>
+<body>
+    <h1>Baby SQL 2</h1>
+    <p>这回，我们引入了反SQLMap装置</p>
+    <form method="post">
+        <input type="hidden" name="rand" value="1" maxlength="50">
+        <button type="submit">来碗鸡汤</button>
+    </form>
+
+    <script>
+    document.forms[0].addEventListener('submit', ()=>{
+        document.getElementsByTagName('input')[0].value = parseInt(Math.random() * 9) + 1;
+    })
+    </script>
+</body>
+</html>

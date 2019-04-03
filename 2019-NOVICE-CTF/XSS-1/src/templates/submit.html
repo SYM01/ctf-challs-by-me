@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block main %}
+    <div class="row">
+        <div class="col col-md-8 offset-md-2">
+            <h2>提交给Jumbo看看问题</h2>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="url">网址</label>
+                    <input type="text" class="form-control" id="url" name="url" required pattern="^{{url_for('.base_path', user_id=user_id, _external=True)}}.*?" value="{{ url_for('.base_path', user_id=user_id, _external=True) }}">
+                    <small id="urlHelp" class="form-text text-muted">网址只能以<code>{{ url_for('.base_path', user_id=user_id, _external=True) }}</code>开头</small>
+                </div>
+                <div class="form-group">
+                    <div id="embed-captcha"></div>
+                </div>
+                <button type="submit" id="embed-submit" class="btn btn-primary">保存</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('static', filename='gt.js') }}"></script>
+    <script>
+        var handlerEmbed = function (captchaObj) {
+            $("#embed-submit").click(function (e) {
+                var validate = captchaObj.getValidate();
+                if (!validate) {
+                    $("#feedback").html('<div class="alert alert-danger" role="alert">验证不通过<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    e.preventDefault();
+                }
+            });
+            captchaObj.appendTo("#embed-captcha");
+        };
+        fetch("{{ url_for('.captcha') }}", {
+            'method': 'post'
+        }).then(resp=>resp.json()).then(data=>{
+            initGeetest({
+                    gt: data.gt,
+                    challenge: data.challenge,
+                    product: "embed",
+                    offline: !data.success 
+                }, handlerEmbed);
+        });
+    </script>
+{% endblock %}

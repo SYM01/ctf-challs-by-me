@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block main %}
+{%- if data | length == 0 %}
+    <h1>这里啥也没有。</h1>
+{%- else %}
+<div class="accordion" id="accordion">
+    {%- for row in data %}
+    <div class="card">
+        <div class="card-header">
+        <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ loop.index }}" aria-expanded="true" aria-controls="collapseOne">
+            {{ row['title'] }}
+            </button>
+        </h2>
+        </div>
+        <div id="collapse-{{ loop.index }}" class="collapse" data-parent="#accordion" data-src="{{ url_for('.view', user_id=user_id, aid=row['aid']) }}">
+            <div class="card-body">
+                加载中...
+            </div>
+        </div>
+    </div>
+    {%- endfor %}
+</div>
+{%- endif %}
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#accordion').on('show.bs.collapse', function (e) {
+        var $el = $(e.target), url = $el.data('src');
+        fetch(url).then(resp=>resp.text()).then(data=>{
+            $el.find('.card-body').html(data)
+        })
+    })
+</script>
+{% endblock %}

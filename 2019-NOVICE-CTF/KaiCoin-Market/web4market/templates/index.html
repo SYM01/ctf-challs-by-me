@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <section class="container">
+        <div class="row">
+            <div class="column column-100">
+                <p>
+                    当前账户剩余人民币 <strong>{{ balance['money'] }}</strong> 元， KaiCoin <strong>{{ balance['coin'] }}</strong> 个
+                </p>
+
+                <h2>创建新交易</h2>
+                <form action="{{ url_for('new_offer') }}" method="POST">
+                    <div class="row">
+                        <div class="column column-50">
+                            <label for="trade_type">交易类型</label>
+                            <select id="trade_type" name="trade_type">
+                                <option value="0" selected="selected">卖出KaiCoin</option>
+                                <option value="1">卖出人民币</option>
+                            </select>
+
+                            <label for="trade_amount">交易数量</label>
+                            <input type="text" id="trade_amount" name="trade_amount">
+                        </div>
+
+                        <div class="column column-50">
+                                <label for="trade_rate">汇率（接受的汇率区间为<em>0.0054</em>~<em>0.0059</em> Coin/RMB）</label>
+                                <input type="text" id="trade_rate" name="trade_rate">
+    
+                                <label for="captcha">验证码</label>
+                                <img class="captcha-image float-right" src="{{ url_for('captcha', t=current_time()) }}" alt="验证码" class="src" title="点击更换验证码">
+                                <div class="captcha-input">
+                                    <input type="text" placeholder="12345" maxlength="5" id="captcha" name="captcha">
+                                </div>
+                            </div>
+                        </div>
+                    <input class="button-primary" type="submit" value="创建交易">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column column-50">
+                <h2>交易市场</h2>
+                <p>（只显示最近40笔）</p>
+                <table>
+                    <thead>
+                        <tr>
+                        <th>卖家</th>
+                        <th>交易类型</th>
+                        <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in offers %}
+                        <tr>
+                            <td>{{ row.name }}</td>
+                            <td>
+                            {%- if row.type == 'buy' -%}
+                                出售 <strong>{{ row.money }}</strong> RMB <br/>
+                                购买 <strong>{{ row.coin }}</strong> KaiCoin
+                            {%- else -%}
+                                出售 <strong>{{ row.coin }}</strong> KaiCoin <br/>
+                                购买 <strong>{{ row.money }}</strong> RMB
+                            {%- endif -%}
+                            </td>
+                            <td>
+                            {%- if logged_user == row.name -%}
+                                <a href="javascript:void(0);" class="button button-clear" onclick="deleteOffer({{ row.id | tojson }})">删除</a>
+                            {%- else -%}
+                                <a href="javascript:void(0);" class="button button-clear" onclick="acceptOffer({{ row.id | tojson }})">交易</a>
+                            {%- endif -%}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="column column-50">
+                <h2>待确认交易</h2>
+                {% if trades | length > 0 %}
+                <p>（只显示最近40笔）</p>
+                <table>
+                    <thead>
+                        <tr>
+                        <th>买家</th>
+                        <th>交易类型</th>
+                        <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in trades %}
+                        <tr>
+                            <td>{{ row.name }}</td>
+                            <td>
+                            {%- if row.type == 'buy' -%}
+                                出售 <strong>{{ row.money }}</strong> RMB <br/>
+                                购买 <strong>{{ row.coin }}</strong> KaiCoin
+                            {%- else -%}
+                                出售 <strong>{{ row.coin }}</strong> KaiCoin <br/>
+                                购买 <strong>{{ row.money }}</strong> RMB
+                            {%- endif -%}
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" class="button button-clear" onclick="deleteTrade({{ row.id | tojson }})">删除</a>
+                                <a href="javascript:void(0);" class="button button-clear" onclick="confirmTrade({{ row.id | tojson }})">确认</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                (暂无待确认交易)
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

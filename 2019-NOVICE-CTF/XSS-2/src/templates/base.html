@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>白客联盟私人笔记</title>
+    <link rel="stylesheet" href="../../static/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">白客联盟私人笔记</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbar-main">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item{% if url_for('.home', user_id=user_id) == request.path %} active{% endif %}">
+                <a class="nav-link" href="{{ url_for('.home', user_id=user_id) }}">主页</a>
+            </li>
+            <li class="nav-item{% if url_for('.new', user_id=user_id) == request.path %} active{% endif %}">
+                    <a class="nav-link" href="{{ url_for('.new', user_id=user_id) }}">新建</a>
+                </li>
+            <li class="nav-item{% if url_for('.submit', user_id=user_id) == request.path %} active{% endif %}">
+                <a class="nav-link" href="{{ url_for('.submit', user_id=user_id) }}">报告问题</a>
+            </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+    <div id="feedback">
+        {%- with messages = get_flashed_messages() %}
+        {%- if messages %}
+        {%- for msg in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ msg }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {%- endfor %}
+        {%- endif %}
+        {%- endwith %}
+    </div>
+
+    {% block main %}
+    {% endblock %}
+    </div>
+    <script src="../../static/jquery-3.3.1.slim.min.js"></script>
+    <script src="../../static/bootstrap.min.js"></script>
+    {% block script %}
+    {% endblock %}
+</body>
+</html>
